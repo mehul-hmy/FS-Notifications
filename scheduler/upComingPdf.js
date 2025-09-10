@@ -556,6 +556,6 @@ function formatDate(date) {
 //*/5 * * * *
 // Schedule to run every 1 minute  (* * * * *)
 
-cron.schedule("* * * * *", upComingPdf);
+cron.schedule("0 10 * * *", upComingPdf);
 
 module.exports = upComingPdf;
