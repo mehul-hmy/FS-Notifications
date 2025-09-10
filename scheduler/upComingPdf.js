@@ -106,13 +106,13 @@ const upComingPdf = async () => {
     const notificationId = matchedDoc?.["id"] || null;
     for (const accountDoc of accountsSnapshot.docs) {
       const accountId = accountDoc.id;
-      // await documentRenewalForPdf(accountId, notificationId);
-      await documentRenewalForPdf(
-        "mhKAQq5wcuYVIadq0bTE",
-        "AyghB5Uqe3UoRZ0DMElw"
-      );
-      // console.log("port",typeof sampleMode,sampleMode);
-      // console.log("documentRenewalForPdf", accountId, notificationId);
+      await documentRenewalForPdf(accountId, notificationId);
+      // await documentRenewalForPdf(
+      //   "mhKAQq5wcuYVIadq0bTE",
+      //   "AyghB5Uqe3UoRZ0DMElw"
+      // );
+      // //console.log("port",typeof sampleMode,sampleMode);
+      // //console.log("documentRenewalForPdf", accountId, notificationId);
     }
     return null;
   } catch (error) {
@@ -175,7 +175,7 @@ async function documentRenewalForPdf(accountId, notificationId) {
   scheduleData.forEach((doc) => {
     const raw = doc.nextRenewal;
     const renewalDate = raw?.toDate ? raw.toDate() : new Date(raw);
-    // console.log("renewalDate",renewalDate);
+    // //console.log("renewalDate",renewalDate);
 
     if (renewalDate > todayMid && renewalDate <= next30DaysMid) {
       upcoming30Days.push(doc);
@@ -188,14 +188,14 @@ async function documentRenewalForPdf(accountId, notificationId) {
 
 
   const reportData = await preloadCellValues(sortedAscData);
-  console.log("reportData", reportData);
+  //console.log("reportData", reportData);
   startDate = formatDate(todayMid);
   endDate = formatDate(next30DaysMid);
-  // console.log("startDate ", startDate);
-  // console.log("endDate ", endDate);
+  // //console.log("startDate ", startDate);
+  // //console.log("endDate ", endDate);
 
-  // console.log("upcoming30Days reportData ", reportData);
-  // console.log('notificationRecipient ', notificationRecipient);
+  // //console.log("upcoming30Days reportData ", reportData);
+  // //console.log('notificationRecipient ', notificationRecipient);
 
   // 2) notificationRecipient
   const notificationRecipientSnapshot = await db
@@ -319,7 +319,7 @@ function preloadCellValues(data) {
 async function printPdf(data, accountId, upcoming30Data) {
   try {
     const company = await getCompanyData(accountId);
-    // console.log("this.companyDetails", company); //4486
+    // //console.log("this.companyDetails", company); //4486
     const pdfData = {
       // data: filteredData,
       columns: moduleListColumn.allColumns,
@@ -342,7 +342,7 @@ async function printPdf(data, accountId, upcoming30Data) {
       preparedBy: "Automated",
       Timeframe: getFinancialYear(),
     };
-    // console.log("pdfData", pdfData);
+    // //console.log("pdfData", pdfData);
     await exportAsPDF(data, pdfData, accountId);
   } catch (error) {
     console.error("PDF generation error:", error);
@@ -371,7 +371,7 @@ async function exportAsPDF(data, payload, accountId) {
       .replace(/ /g, " "); // optional: ensures spacing
 
     const fileName = `_${formattedDate}_${timestamp}.pdf`;
-    console.log(fileName); // _8 Aug 2025.pdf
+    //console.log(fileName); // _8 Aug 2025.pdf
 
     // const fileName = `_${Date.now()}.pdf`; // Include extension
     const destination = `upComingRenewalPdf/${accountId}/${fileName}`;
@@ -392,7 +392,7 @@ async function exportAsPDF(data, payload, accountId) {
 
     // Save PDF
     fs.writeFileSync(filePath, Buffer.from(response.data));
-    console.log("PDF saved at:", filePath);
+    //console.log("PDF saved at:", filePath);
 
     //  file is actually saved as a JSON now convert into the real PDF.
     // 1. Parse the JSON file
@@ -420,7 +420,7 @@ async function exportAsPDF(data, payload, accountId) {
     });
 
     const publicUrl = `https://storage.googleapis.com/${bucket.name}/${destination}`;
-    console.log("File uploaded to Firebasen :", publicUrl);
+    //console.log("File uploaded to Firebasen :", publicUrl);
 
     // Clean up local file
     fs.unlinkSync(filePath);
@@ -455,8 +455,8 @@ function getFinancialYear() {
 
 //it a useful funciton
 async function sendNotification(data, accountId, publicUrl, fileName) {
-  // console.log("data", data);
-  console.log("data.userIdOrRoleId", data.userIdOrRoleId);
+  // //console.log("data", data);
+  //console.log("data.userIdOrRoleId", data.userIdOrRoleId);
   if (data.allowWhatsApp) {
     // 1) Query for documents where uid matches
     const employeeSnapshot = await db
@@ -472,7 +472,7 @@ async function sendNotification(data, accountId, publicUrl, fileName) {
       employeeDetail[0]?.["contactNumber1"] ??
       employeeDetail[0]?.["contactNumber2"] ??
       null;
-    console.log("employeeDetail contactNumber", contactNumber, employeeDetail[0]?.["emailId"]);
+    //console.log("employeeDetail contactNumber", contactNumber, employeeDetail[0]?.["emailId"]);
     if (contactNumber) {
       await sendWhatsAppNotificationPdf(contactNumber, publicUrl, fileName);
     }
@@ -533,7 +533,7 @@ async function sendWhatsAppNotificationPdf(phoneNumber, publicUrl, fileName) {
 
     try {
       const { data } = await axios.request(options);
-      console.log(`WhatsApp sent to ${phoneNumber}`, data);
+      //console.log(`WhatsApp sent to ${phoneNumber}`, data);
       return data;
     } catch (error) {
       console.error(`WhatsApp failed for ${phoneNumber}`, error);
