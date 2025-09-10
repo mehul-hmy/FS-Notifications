@@ -11,14 +11,14 @@
 
 // firebase.js
 const admin = require("firebase-admin");
-// const sourceServiceAccount = require("./services/serviceAccountKey.json");
-const targetServiceAccount = require("./services/targetServiceAccount.json");
+const sourceServiceAccount = require("./services/serviceAccountKey.json");
+// const targetServiceAccount = require("./services/targetServiceAccount.json");
 
 // Initialize source app (default)
 const sourceApp = admin.initializeApp(
   {
-    credential: admin.credential.cert(targetServiceAccount),
-    storageBucket: "fs-prd.appspot.com",
+    credential: admin.credential.cert(sourceServiceAccount),
+    storageBucket: "fs-test-14f54.appspot.com",
   },
   "sourceApp"
 );
