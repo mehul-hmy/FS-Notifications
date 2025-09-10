@@ -1,5 +1,5 @@
 # Node
 /node_modules
-# .env
-# /firebase.js
+.env
+/firebase.js
 /services
